@@ -1,0 +1,132 @@
+---
+title: "Data Understanding: R Introduction"
+author: "CL"
+date: "9/7/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.  You can also look at  Wickham, H., & Grolemund, G. (2016). R for data science: import, tidy, transform, visualize, and model data. " O'Reilly Media, Inc." [Chapter 27](https://r4ds.had.co.nz/r-markdown.html) for more info about R Markdown files.
+
+In this document we will go over some of the commands to load and read data, view  information about data types, ad how to summarize  it.  
+
+```{r}
+#We will use the mpg dataset, which you can find more info HERE https://archive.ics.uci.edu/ml/datasets/auto+mpg OR you can type in the console ?mpg
+
+#This dataset is on the "ggplot2" library
+
+if(!require(ggplot2)){ #This just check if the library is installed already or not
+  install.packages('ggplot2',verbose=T,dependencies=TRUE)   # if not, this will install it
+}
+if(!require(ggplot2)){ #This just check if the library is installed already or not
+  install.packages('ggplot2',verbose=T,dependencies=TRUE)   # if not, this will install it
+}
+
+library (ggplot2)    #Load library
+
+
+```
+
+## Loading dataset from a Library
+
+The dataset is already loaded with the package and it is named 'mpg'
+```{r}
+
+?mpg
+
+data=mpg    #This is just to create  a new data structure call "data' that you can see in the "Environment" tabs and double click to open it.
+
+head(data)   # The function head print out the first 10 rows of the data
+
+tail(data)   # tail print out the last 10 rows of the dataset
+
+```
+### Data dimensions 
+Once you see the data, you need to check how many features (columns) it has, and how many entities (rows)
+```{r}
+dim(data)  #Prints #rows and # columns
+
+ncol(data)   #print # columns
+
+nrow(data)   #print # rows
+
+```
+
+### Data Structure and type
+
+We also need to understand the data type of our features. R has their unique data object type and structure that we can explore using the functions "str". For more info about R Data Object and Structures visit [HERE]( https://mgimond.github.io/ES218/Week02a.html)
+```{r}
+str(data)
+```
+From this we can see that we have a mix of nominal data types (i.e., "chr"= characters) and numeric data types.  Very important to remember is that when performing some statistical analysis, you will need to transform some datatypes in "factors" using the "as.factor" functions. However, character with number might not directly translate to factor with the right order or level. Hence, you need to always check the order of your factor. 
+
+### Data Summary
+ 
+We can use the function "summary" to extract some summary statistics about our data 
+```{r}
+summary(data)
+```
+To get counts or frequency distribution of a feature that is of "character" type, we need to transform it to factor. 
+```{r}
+data$manufacturer<-as.factor(data$manufacturer)
+data$model<-as.factor(data$model)
+data$trans<-as.factor(data$trans)
+data$drv<-as.factor(data$drv)
+data$fl<-as.factor(data$fl)
+data$class<-as.factor(data$class)
+
+summary(data)
+```
+To create a frequency table you can use the "table" function 
+```{r}
+table(data$manufacturer)
+```
+To calculate the range  of a numeric data type, you can use the function "range"
+```{r}
+range(data$displ)
+
+```
+
+
+Unfortunately, base R does not provide a function for finding the mode, but you can create your own use the one from the "modeest" package 
+
+```{r}
+
+if(!require(modeest)){ 
+  install.packages('modeest',verbose=T,dependencies=TRUE)   
+}
+
+library (modeest)
+mfv(data$displ)
+```
+OR
+```{r}
+head(sort(table(data$displ),decreasing =T),n=5)  # This will show the top 5 most frequent values
+```
+
+## Loading Data from your computer
+
+
+This is just to download a csv from GitHub for consistency
+```{r}
+
+ABS_FILE_PATH='./SUMMARY_moth.csv'   #name are different from Apple OS and Window, make sure to use the appropriate one. 
+
+print("FILE AT:")
+print( getwd())
+download.file ("https://raw.githubusercontent.com/lopezbec/COVID19_Tweets_Dataset/main/Summary_Details/SUMMARY_moth.csv", destfile=ABS_FILE_PATH)
+
+
+```
+To read a csv file from your computer, just need to provide the File Path and use the functions "read.csv"
+```{r}
+data<-read.csv(ABS_FILE_PATH)
+
+head(data)
+```
+
+
+
