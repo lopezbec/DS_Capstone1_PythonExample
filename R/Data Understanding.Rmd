@@ -2,7 +2,10 @@
 title: "Data Understanding: R Introduction"
 author: "CL"
 date: "9/7/2021"
-output: html_document
+output: 
+  github_document:
+    pandoc_args: ["--wrap=none"]
+always_allow_html: true
 ---
 
 ```{r setup, include=FALSE}
